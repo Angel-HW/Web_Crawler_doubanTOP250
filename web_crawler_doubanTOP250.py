@@ -12,4 +12,3 @@ print(len(titlelist))
 
 for ench in titlelist:
     print(ench)
-#print(html)
