@@ -6,7 +6,7 @@ import time
 
 start = time.perf_counter()
 
-socket.setdefaulttimeout(30)
+socket.setdefaulttimeout(3)
 
 def get_html(url):
     try:
@@ -34,7 +34,8 @@ def download_img(picture_url,file_name,name):
         while count < 3:
             try:
                 print('第'+str(count)+'次失败！')
-                name = download_img(picture_url,file_name,name)
+                urllib.request.urlretrieve(picture_url,file_name,None)
+                print('爬了'+str(name)+'张')
                 break
             except socket.timeout:
                 count+=1
