@@ -6,7 +6,7 @@ import time
 
 start = time.perf_counter()
 
-socket.setdefaulttimeout(3)
+socket.setdefaulttimeout(10)
 
 def get_html(url):
     try:
@@ -20,7 +20,7 @@ def get_html(url):
     except error.URLError as e:
         print(e.reason)
 
-def download_img(picture_url,file_name,name):
+def download_img(picture_url,file_name,name):#保存海报
     try:
         urllib.request.urlretrieve(picture_url,file_name,None)
         print('爬了'+str(name)+'张')
@@ -43,14 +43,30 @@ def download_img(picture_url,file_name,name):
             print('爬取失败！')
     return name
 
-def get_img(html,name):
+def get_info(ench,name):#保存信息
+    file = open(r'E:\Study\programingtools\py\program\doubanTOP250\infomation\info.txt','a')
+    for en in ench:
+        data = {
+            '排名：':name,
+            '剧名：':ench[0],
+            '海报链接：':ench[1],
+            '评分：':ench[2]+'分',
+            '评论人数：':ench[3]
+            }
+        file.write(str(data))
+    file.write('\n')
+    print(name,ench)
+    if file:
+        file.close()
+
+def get_img(html,name):#得到海报链接
     tit = r'<img width="100" alt="(.*)" src="([^"]+\.jpg)" class="">+(?:[\s\S]*?)+<span class="rating_num" property="v:average">+(\d\.\d)+</span>+(?:[\s\S]*?)+<span>+([\d]+人评价)+</span>'
     titlelist = re.findall(tit,html)
     for ench in titlelist:
         pictrue_url = ench[1]
         pictrue_name = ench[0]
-        file_name = 'E:\Study\programingtools\py\program\doubanTOP250\\'+str(name)+'_'+pictrue_name+'.jpg'
-        print(pictrue_url)
+        file_name = 'E:\Study\programingtools\py\program\doubanTOP250\picture\\'+str(name)+'_'+pictrue_name+'.jpg'
+        get_info(ench,name)
         name = download_img(pictrue_url,file_name,name)
         name += 1
     return name
